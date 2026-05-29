@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Flippi
+Comment=Clipboard, Emojis & GIFs für Linux
+Exec=flippi
+Icon=io.github.frankspeu.flippi
+Type=Application
+Categories=Utility;
+Keywords=clipboard;emoji;gif;picker;
+StartupWMClass=flippi
+NoDisplay=true

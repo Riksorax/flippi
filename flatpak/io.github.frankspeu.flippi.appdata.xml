@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.frankspeu.flippi</id>
+
+  <name>Flippi</name>
+  <summary>Clipboard, Emojis &amp; GIFs für Linux</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <description>
+    <p>
+      Flippi ist ein systemweiter Picker für Clipboard-History, Emojis und GIFs unter Linux Wayland.
+      Per globalem Shortcut (Super + .) öffnet sich ein kompaktes Popup-Fenster.
+    </p>
+    <ul>
+      <li>Clipboard-History mit automatischer Erkennung von Text, URLs und Code</li>
+      <li>Unicode-Emojis, Material Icons und eigene Custom-Emojis</li>
+      <li>GIF-Suche via Giphy</li>
+      <li>Wayland-nativ, kein Taskbar-Eintrag</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.frankspeu.flippi.desktop</launchable>
+
+  <url type="homepage">https://github.com/Riksorax/flippi</url>
+  <url type="bugtracker">https://github.com/Riksorax/flippi/issues</url>
+
+  <screenshots>
+    <!-- Screenshots vor Flathub-Submission hinzufügen -->
+  </screenshots>
+
+  <releases>
+    <release version="1.0.0" date="2026-05-29">
+      <description>
+        <p>Erste Veröffentlichung.</p>
+      </description>
+    </release>
+  </releases>
+
+  <content_rating type="oars-1.1"/>
+</component>
