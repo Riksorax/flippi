@@ -11,22 +11,17 @@ import 'core/hotkey/hotkey_service.dart';
 const _socketPath = '/tmp/flippi.sock';
 
 void main(List<String> args) async {
-  // --toggle MUSS vor jeder Flutter/Hive-Initialisierung laufen
-  if (args.contains('--toggle')) {
-    await _sendToggle();
-    return;
-  }
+  // Läuft eine Instanz? → togglen und beenden. Sonst als Hauptinstanz starten.
+  if (await _sendToggle()) return;
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Hive initialisieren — nutzt XDG_DATA_HOME (~/.local/share/flippi),
-  // im Flatpak Sandbox automatisch ~/.var/app/io.github.frankspeu.flippi/data/
   final dataDir = await getApplicationSupportDirectory();
   Hive.init(dataDir.path);
   await Hive.openBox<String>('clipboard');
   await Hive.openBox<String>('custom_emojis');
+  await Hive.openBox<String>('recent_emojis');
 
-  // Window Manager initialisieren
   await windowManager.ensureInitialized();
   const windowOptions = WindowOptions(
     size: Size(420, 520),
@@ -41,32 +36,29 @@ void main(List<String> args) async {
     await windowManager.focus();
   });
 
-  // Globaler Hotkey (Super + .)
   await HotkeyService.init();
-
-  // Toggle-Server starten (empfängt --toggle Signale)
   _startToggleServer();
 
   runApp(const ProviderScope(child: FlippiApp()));
 }
 
-// Sendet "toggle" an die laufende Instanz via Unix Socket
-Future<void> _sendToggle() async {
+// Gibt true zurück wenn eine laufende Instanz erfolgreich getoggled wurde
+Future<bool> _sendToggle() async {
   try {
     final socket = await Socket.connect(
       InternetAddress(_socketPath, type: InternetAddressType.unix),
       0,
-      timeout: const Duration(seconds: 1),
+      timeout: const Duration(milliseconds: 500),
     );
     socket.write('toggle');
     await socket.flush();
     await socket.close();
+    return true;
   } catch (_) {
-    // Keine laufende Instanz gefunden
+    return false;
   }
 }
 
-// Lauscht auf Toggle-Signale von anderen Instanzen
 void _startToggleServer() async {
   final sockFile = File(_socketPath);
   if (sockFile.existsSync()) sockFile.deleteSync();

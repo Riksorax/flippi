@@ -7,7 +7,6 @@ import '../../shared/widgets/flippi_shell.dart';
 
 // ── Daten ──────────────────────────────────────────────────────────────────
 
-const _recentEmojis = ['🎉', '🔥', '✅', '😄', '🚀', '💡', '⚡', '👀', '🎯'];
 
 const _categoryNames = {
   Category.SMILEYS:    'Smileys & Menschen',
@@ -72,6 +71,26 @@ class CustomEmojiNotifier extends Notifier<List<String>> {
 
 final customEmojiProvider = NotifierProvider<CustomEmojiNotifier, List<String>>(CustomEmojiNotifier.new);
 
+class RecentEmojiNotifier extends Notifier<List<String>> {
+  static const _maxRecent = 18;
+  Box<String> get _box => Hive.box<String>('recent_emojis');
+
+  @override
+  List<String> build() => _box.values.toList();
+
+  void use(String emoji) {
+    final updated = [emoji, ...state.where((e) => e != emoji)];
+    final trimmed = updated.take(_maxRecent).toList();
+    _box.clear();
+    for (final e in trimmed) {
+      _box.add(e);
+    }
+    state = trimmed;
+  }
+}
+
+final recentEmojiProvider = NotifierProvider<RecentEmojiNotifier, List<String>>(RecentEmojiNotifier.new);
+
 // ── Tab ────────────────────────────────────────────────────────────────────
 
 class EmojiTab extends ConsumerWidget {
@@ -85,8 +104,10 @@ class EmojiTab extends ConsumerWidget {
       padding: const EdgeInsets.all(10),
       children: [
         if (query.isEmpty) ...[
-          _SectionTitle('Zuletzt verwendet'),
-          _EmojiGrid(emojis: _recentEmojis),
+          if (ref.watch(recentEmojiProvider).isNotEmpty) ...[
+            _SectionTitle('Zuletzt verwendet'),
+            _EmojiGrid(emojis: ref.watch(recentEmojiProvider)),
+          ],
           ..._emojiCategories.entries.map((e) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [_SectionTitle(e.key), _EmojiGrid(emojis: e.value)],
@@ -99,7 +120,7 @@ class EmojiTab extends ConsumerWidget {
           _SectionTitle('Ergebnisse'),
           _EmojiGrid(
             emojis: [
-              ..._recentEmojis,
+              ...ref.watch(recentEmojiProvider),
               ..._emojiCategories.values.expand((e) => e),
               ...ref.watch(customEmojiProvider),
             ].where((e) => e.toLowerCase().contains(query)).toList(),
@@ -135,15 +156,15 @@ class _EmojiGrid extends StatelessWidget {
   }
 }
 
-class _EmojiBtn extends StatefulWidget {
+class _EmojiBtn extends ConsumerStatefulWidget {
   final String emoji;
   const _EmojiBtn({required this.emoji});
 
   @override
-  State<_EmojiBtn> createState() => _EmojiBtnState();
+  ConsumerState<_EmojiBtn> createState() => _EmojiBtnState();
 }
 
-class _EmojiBtnState extends State<_EmojiBtn> {
+class _EmojiBtnState extends ConsumerState<_EmojiBtn> {
   bool _hovered = false;
 
   @override
@@ -152,7 +173,10 @@ class _EmojiBtnState extends State<_EmojiBtn> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTap: () => Clipboard.setData(ClipboardData(text: widget.emoji)),
+        onTap: () {
+          Clipboard.setData(ClipboardData(text: widget.emoji));
+          ref.read(recentEmojiProvider.notifier).use(widget.emoji);
+        },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 100),
           decoration: BoxDecoration(
