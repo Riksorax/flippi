@@ -4,7 +4,9 @@ A system-wide clipboard history, emoji, and GIF picker for Linux Wayland — bui
 
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/Riksorax)
 
-![Clipboard Tab](flatpak/screenshots/01_clipboard.png)
+| Clipboard | Emoji | GIF |
+|---|---|---|
+| ![Clipboard](flatpak/screenshots/01_clipboard.png) | ![Emoji](flatpak/screenshots/02_emojiboard.png) | ![GIF](flatpak/screenshots/03_gifboard.png) |
 
 ---
 
