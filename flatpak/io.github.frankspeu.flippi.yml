@@ -40,18 +40,18 @@ modules:
       - cp -r data /app/flippi/data
       - printf '#!/bin/sh\ncd /app/flippi && exec ./flippi "$@"\n' > /app/bin/flippi
       - chmod +x /app/bin/flippi
-      - install -Dm644 io.github.frankspeu.flippi.desktop /app/share/applications/io.github.frankspeu.flippi.desktop
-      - install -Dm644 io.github.frankspeu.flippi.appdata.xml /app/share/metainfo/io.github.frankspeu.flippi.appdata.xml
-      - install -Dm644 icons/128x128/io.github.frankspeu.flippi.png /app/share/icons/hicolor/128x128/apps/io.github.frankspeu.flippi.png
-      - install -Dm644 icons/256x256/io.github.frankspeu.flippi.png /app/share/icons/hicolor/256x256/apps/io.github.frankspeu.flippi.png
-      - install -Dm644 icons/512x512/io.github.frankspeu.flippi.png /app/share/icons/hicolor/512x512/apps/io.github.frankspeu.flippi.png
+      - install -Dm644 source/flatpak/io.github.frankspeu.flippi.desktop /app/share/applications/io.github.frankspeu.flippi.desktop
+      - install -Dm644 source/flatpak/io.github.frankspeu.flippi.appdata.xml /app/share/metainfo/io.github.frankspeu.flippi.appdata.xml
+      - install -Dm644 source/flatpak/icons/128x128/io.github.frankspeu.flippi.png /app/share/icons/hicolor/128x128/apps/io.github.frankspeu.flippi.png
+      - install -Dm644 source/flatpak/icons/256x256/io.github.frankspeu.flippi.png /app/share/icons/hicolor/256x256/apps/io.github.frankspeu.flippi.png
+      - install -Dm644 source/flatpak/icons/512x512/io.github.frankspeu.flippi.png /app/share/icons/hicolor/512x512/apps/io.github.frankspeu.flippi.png
     sources:
-      - type: dir
-        path: ../build/linux/x64/release/bundle
-      - type: file
-        path: io.github.frankspeu.flippi.desktop
-      - type: file
-        path: io.github.frankspeu.flippi.appdata.xml
-      - type: dir
-        path: icons
-        dest: icons
+      - type: archive
+        url: https://github.com/Riksorax/flippi/releases/download/v1.0.0/flippi-1.0.0-linux-x64.tar.gz
+        sha256: 652bd0928c7432028be06fc6bc23cb21b8d69f353218356a9a6dbf1244112009
+        strip-components: 1
+      - type: archive
+        url: https://github.com/Riksorax/flippi/archive/refs/tags/v1.0.0.tar.gz
+        sha256: 547725266716e6dc9a5ca3496ee3ce1ee89022445c45923874392fd28f3f464d
+        dest: source
+        strip-components: 1
