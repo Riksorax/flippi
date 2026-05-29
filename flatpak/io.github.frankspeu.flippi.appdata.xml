@@ -31,6 +31,14 @@
       <caption>Clipboard-History mit Typ-Erkennung (Text, URL, Code)</caption>
       <image>https://raw.githubusercontent.com/Riksorax/flippi/main/flatpak/screenshots/01_clipboard.png</image>
     </screenshot>
+    <screenshot>
+      <caption>Emoji-Picker mit über 1800 Unicode-Emojis und Zuletzt-verwendet-Sektion</caption>
+      <image>https://raw.githubusercontent.com/Riksorax/flippi/main/flatpak/screenshots/02_emojiboard.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>GIF-Suche via Giphy API</caption>
+      <image>https://raw.githubusercontent.com/Riksorax/flippi/main/flatpak/screenshots/03_gifboard.png</image>
+    </screenshot>
   </screenshots>
 
   <releases>
