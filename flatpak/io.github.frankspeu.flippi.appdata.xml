@@ -27,7 +27,10 @@
   <url type="bugtracker">https://github.com/Riksorax/flippi/issues</url>
 
   <screenshots>
-    <!-- Screenshots vor Flathub-Submission hinzufügen -->
+    <screenshot type="default">
+      <caption>Clipboard-History mit Typ-Erkennung (Text, URL, Code)</caption>
+      <image>https://raw.githubusercontent.com/Riksorax/flippi/main/flatpak/screenshots/01_clipboard.png</image>
+    </screenshot>
   </screenshots>
 
   <releases>

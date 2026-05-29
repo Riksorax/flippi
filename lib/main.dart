@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'app.dart';
 import 'core/hotkey/hotkey_service.dart';
@@ -18,8 +19,10 @@ void main(List<String> args) async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Hive initialisieren
-  await Hive.initFlutter();
+  // Hive initialisieren — nutzt XDG_DATA_HOME (~/.local/share/flippi),
+  // im Flatpak Sandbox automatisch ~/.var/app/io.github.frankspeu.flippi/data/
+  final dataDir = await getApplicationSupportDirectory();
+  Hive.init(dataDir.path);
   await Hive.openBox<String>('clipboard');
   await Hive.openBox<String>('custom_emojis');
 

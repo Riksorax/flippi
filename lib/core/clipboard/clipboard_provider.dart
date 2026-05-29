@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
@@ -40,12 +42,28 @@ class ClipboardNotifier extends Notifier<List<ClipEntry>> {
 
   @override
   List<ClipEntry> build() {
+    final timer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      try {
+        final result = await Process.run('wl-paste', ['--no-newline']);
+        if (result.exitCode != 0) return;
+        final text = result.stdout as String;
+        if (text.isEmpty) return;
+        if (state.any((e) => e.text == text)) return;
+        add(ClipEntry(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          text: text,
+          type: ClipEntry.detectType(text),
+          time: DateTime.now(),
+        ));
+      } catch (_) {}
+    });
+    ref.onDispose(timer.cancel);
+
     if (_box.isEmpty) return [];
-    final entries = _box.values
+    return _box.values
         .map((v) => ClipEntry.fromJson(jsonDecode(v) as Map<String, dynamic>))
         .toList()
       ..sort((a, b) => b.time.compareTo(a.time));
-    return entries;
   }
 
   void add(ClipEntry entry) {
